@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Layout from './components/Layout';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
 import Product from './pages/Product';
@@ -10,25 +11,31 @@ function App() {
     <Routes>
       <Route
         path='/'
-        element={<Navigate to='products' />}
-      />
-      <Route
-        path='/products'
-        element={<Products />}
-      />
-      <Route
-        path='products/:id'
-        element={<Product />}
-      />
-      <Route
-        path='cart'
-        element={<Cart />}
-      />
+        element={<Layout />}
+      >
+        <Route
+          index
+          path='/'
+          element={<Navigate to='products' />}
+        />
+        <Route
+          path='/products'
+          element={<Products />}
+        />
+        <Route
+          path='products/:id'
+          element={<Product />}
+        />
+        <Route
+          path='cart'
+          element={<Cart />}
+        />
 
-      <Route
-        path='*'
-        element={<NotFound />}
-      />
+        <Route
+          path='*'
+          element={<NotFound />}
+        />
+      </Route>
     </Routes>
   );
 }

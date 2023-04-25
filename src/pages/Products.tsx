@@ -1,47 +1,41 @@
-import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import ProductDetail from '../components/ProductDetail';
-import { API_PRODUCTS_URL } from '../constants/config';
+import Grid from '@mui/material/Grid';
+import CircularIndeterminate from '../components/CircularIndeterminate';
+import ProductCard from '../components/ProductCard';
+import { useAxiosInstance } from '../hooks/useAxiosInstance';
 import { TProduct } from '../types/Product';
 
 const Products = () => {
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<TProduct[]>([]);
-
-  const getProducts = useCallback(() => {
-    axios
-      .get(API_PRODUCTS_URL)
-      .then(({ data }) => {
-        setProducts(data);
-      })
-      .catch((error) => {
-        // handle error
-        console.error(error);
-      })
-      .finally(function () {
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    getProducts();
-  }, [getProducts]);
+  const { data: products, loading }: { data: TProduct[]; loading: boolean } =
+    useAxiosInstance({
+      url: '/products',
+      method: 'GET',
+      initialData: [],
+    });
 
   if (loading) {
-    return <>Loading...</>;
+    return <CircularIndeterminate />;
   }
 
   return (
-    <div>
-      <Link to='/cart'>Card</Link>
-      {products.map((product) => (
-        <ProductDetail
-          key={product.id}
-          product={product}
-        />
-      ))}
-    </div>
+    <>
+      <Grid
+        container
+        spacing={2}
+      >
+        {products.map((product) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={3}
+            style={{ marginBottom: 32 }}
+            key={product.id}
+          >
+            <ProductCard product={product} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 };
 

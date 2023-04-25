@@ -1,21 +1,8 @@
-import React, { ReactNode, useCallback, useState } from 'react';
-import { TProduct } from '../types/Product';
+import { ReactNode, useCallback, useState } from 'react';
+import { TProduct } from '../../types/Product';
+import { CartContext } from './CartContext';
 
-export type TStore = {
-  products: TProduct[];
-  addToCard: (product: TProduct) => void;
-  deleteFromCart: (productId: number) => void;
-};
-
-const defaultStore: TStore = {
-  products: [],
-  addToCard: () => {},
-  deleteFromCart: () => {},
-};
-
-export const StoreContext = React.createContext<TStore>(defaultStore);
-
-export const StoreProvider = ({ children }: { children: ReactNode }) => {
+export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<TProduct[]>([]);
 
   const addToCard = useCallback(
@@ -43,8 +30,6 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     [products]
   );
 
-  console.log({ products });
-
   const deleteFromCart = useCallback(
     (productId: number) => {
       const newProducts = products.filter(
@@ -56,8 +41,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <StoreContext.Provider value={{ products, addToCard, deleteFromCart }}>
+    <CartContext.Provider value={{ products, addToCard, deleteFromCart }}>
       {children}
-    </StoreContext.Provider>
+    </CartContext.Provider>
   );
 };
